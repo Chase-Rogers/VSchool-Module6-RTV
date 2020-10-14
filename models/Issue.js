@@ -13,6 +13,11 @@ const IssueSchema = new Schema({
     type: String,
     required: true
   },
+  comments: {
+    type: Schema.Types.ObjectId,
+    ref: 'Comment',
+    required: false
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",

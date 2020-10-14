@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 // import comment from '../../../models/comment.js'
-import { UserContext } from '../context/UserProvider.js'
+import { IssueContext } from '../context/IssueProvider'
 
 
 
@@ -8,14 +8,14 @@ import { UserContext } from '../context/UserProvider.js'
 
 export default function Comment(props){
 
-    const {issueComments} = useContext(UserContext)
-
-    const {issueComment} = props
-  console.log('here',issueComment)
+    // const {issueComments} = useContext(IssueContext)
+    const { comment } = props
+    // const {issueComment} = props
+  console.log('here',comment)
 
   return (
     <div className="Comment">
-        <p>{issueComment.comment}</p>
+        <p>{comment.comment}</p>
     </div>
   )
 }

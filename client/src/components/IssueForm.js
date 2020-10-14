@@ -1,12 +1,12 @@
 import React, { useContext } from 'react'
-import { UserContext } from '../context/UserProvider.js'
+import { IssueContext } from '../context/IssueProvider'
 
 
 
 
 export default function IssueForm(props){
   const { addIssue } = props
-  const {inputs, setInputs, initInputs} = useContext(UserContext)
+  const {inputs, setInputs, initInputs} = useContext(IssueContext)
 
 
   function handleChange(e){
