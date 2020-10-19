@@ -4,7 +4,7 @@ import Comment from './Comment'
 
 
 export default function CommentList(props){
-console.log('issue comments',props.comments)
+// console.log('issue comments',props.comments)
 const {comments} = props
 
   return (

@@ -50,14 +50,33 @@ issueRouter.delete("/:issueId", (req, res, next) => {
     }
   )
 })
+Array.prototype.remove = function() {
+  var what, a = arguments, L = a.length, ax;
+  while (L && this.length) {
+      what = a[--L];
+      while ((ax = this.indexOf(what)) !== -1) {
+          this.splice(ax, 1);
+      }
+  }
+  return this;
+};
 
 // Update Issue
-issueRouter.put("/:issueId", (req, res, next) => {
+issueRouter.put("/:issueId", async (req, res, next) => {
+  // console.log('req:', req.params.issueId);
+  // console.log(req.user._id)
+  // console.log(req.body)
+  // let something = await Issue.findOne({ _id: req.params.issueId, user: req.user._id });
+  // console.log("somthing:", something);
   Issue.findOneAndUpdate(
-    { _id: req.params.IssueId, user: req.user._id },
+    { _id: req.params.issueId },
     req.body,
-    { new: true },
+    { new: true, upsert: true },
     (err, updatedIssue) => {
+      // {updatedIssue.voters = updatedIssue.voters.remove(req.user.username)}
+      // updatedIssue.voters = updatedIssue.voters.remove(req.user.username)
+      console.log('update', updatedIssue)
+      console.log('err', err);
       if(err){
         res.status(500)
         return next(err)

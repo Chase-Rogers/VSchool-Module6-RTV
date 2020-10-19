@@ -11,7 +11,7 @@ export default function Comment(props){
     // const {issueComments} = useContext(IssueContext)
     const { comment } = props
     // const {issueComment} = props
-  console.log('here',comment)
+  // console.log('here',comment)
 
   return (
     <div className="Comment">

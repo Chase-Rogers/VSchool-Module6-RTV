@@ -13,10 +13,14 @@ const IssueSchema = new Schema({
     type: String,
     required: true
   },
-  comments: {
-    type: Schema.Types.ObjectId,
-    ref: 'Comment',
+  voters: {
+    type: Array,
     required: false
+  },
+  votes: {
+    type: Number,
+    default: 0,
+    required: true
   },
   user: {
     type: Schema.Types.ObjectId,

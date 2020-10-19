@@ -20,6 +20,7 @@ export default function IssueProvider(props){
     description: "",
     imgUrl: "",
     votes: 0,
+    voters: []
   }
 
   const commentsInput = {
@@ -34,7 +35,6 @@ export default function IssueProvider(props){
     user: JSON.parse(localStorage.getItem("user")) || {}, 
     token: localStorage.getItem("token") || "", 
     issues: [],
-    issueComments: [],
     errMsg: ''
   }
 //   console.log(initState)
@@ -95,7 +95,6 @@ export default function IssueProvider(props){
       .then(res => {
         setUserState(prevState => ({
           ...prevState,
-          issueComments: res.data
         }))
         return res.data
       })
@@ -111,11 +110,16 @@ export default function IssueProvider(props){
         //   ...prevState,
         //   comments: res.data
         // }))
-        setUserState(prevState => ({
+        console.log(res.data)
+        setUserState(prevState => {
+          console.log('prevState', prevState)
+          prevState.issues.find((issue)=>issue._id === res.data.issue).comments.push(res.data);
+          return ({
           ...prevState,
-          issueComments: [...prevState.issueComments, res.data]
-        }))
+        })
       })
+      })
+    
       .catch(err => console.log(err.response.data.errMsg))
   }
   function addIssue(newIssue){
@@ -141,6 +145,50 @@ export default function IssueProvider(props){
         .catch((err) => console.log(err.response.data.errMsg));
   };
 
+  Array.prototype.remove = function() {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};
+
+  const issueLiked = (issueId, username, issue) => {
+    let issueToSend = Object.assign(issue)
+    console.log(issueToSend)
+    
+    if(issueToSend.voters.includes(username)) {
+      issueToSend.voters.remove(username)
+      console.log('This',issueToSend)
+      userAxios.put(`/api/issue/${issueId}`, issueToSend)
+        .then((res) => {
+          console.log(res.data)
+          setUserState(prevInputs => ({
+            ...prevInputs,
+            [prevInputs.issues.filter(issue => issue._id === issueId).voters]: issueToSend.voters
+          }))
+        })
+    } else {
+      // console.log(false)
+      console.log('One',issueToSend.voters)
+      console.log(username)
+      issueToSend.voters.push(username)
+      console.log('Two',issueToSend)
+
+      userAxios.put(`/api/issue/${issueId}`, issueToSend)
+        .then((res) => {
+          console.log(res.data)
+          setUserState(prevInputs => ({
+            ...prevInputs,
+            [prevInputs.issues.filter(issue => issue._id === issueId).voters]: issueToSend.voters
+          }))
+        })
+    }
+  }
+
   return (
     <IssueContext.Provider
       value={{
@@ -154,7 +202,8 @@ export default function IssueProvider(props){
         comments,
         setComments,
         getUserIssues,
-        getIssues
+        getIssues,
+        issueLiked
       }}>
       { props.children }
     </IssueContext.Provider>
